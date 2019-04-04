@@ -1,7 +1,5 @@
 package capricorn.q.hbase.phoenix
 
-import java.sql.DriverManager
-
 import capricorn.q.domain.User
 import capricorn.q.hbase.PhoenixUtil
 import com.alibaba.fastjson.JSON
