@@ -16,7 +16,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object PhoenixApp {
 
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName("WordCount").setMaster("local[3]")
+    val conf = new SparkConf().setAppName(" phoenix test ").setMaster("local[3]")
     val ssc = new StreamingContext(conf, Seconds(15))
     ssc.sparkContext.setLogLevel("warn")
 
