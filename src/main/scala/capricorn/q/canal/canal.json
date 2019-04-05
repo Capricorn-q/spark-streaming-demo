@@ -1,0 +1,35 @@
+{
+  "data": [
+    {
+      "id": "3",
+      "name": "jack",
+      "age": "17",
+      "address": "bj"
+    }
+  ],
+  "database": "test",
+  "es": 1554438336000,
+  "id": 872,
+  "isDdl": false,
+  "mysqlType": {
+    "id": "int(11)",
+    "name": "varchar(50)",
+    "age": "int(11)",
+    "address": "varchar(100)"
+  },
+  "old": [
+    {
+      "age": "15"
+    }
+  ],
+  "sql": "",
+  "sqlType": {
+    "id": 4,
+    "name": 12,
+    "age": 4,
+    "address": 12
+  },
+  "table": "user",
+  "ts": 1554438336719,
+  "type": "UPDATE"
+}
