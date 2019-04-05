@@ -1,7 +1,8 @@
 package capricorn.q.hbase.phoenix
 
+import java.sql.DriverManager
+
 import capricorn.q.domain.User
-import capricorn.q.hbase.PhoenixUtil
 import com.alibaba.fastjson.JSON
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
@@ -39,20 +40,39 @@ object PhoenixApp {
     ).filter(_ != null)
 
     ds.print(3)
+    //    ds.foreachRDD(
+    //      r => r.foreachPartition {
+    //        p =>
+    //          p.foreach(
+    //            r => {
+    //              val con = PhoenixUtils.getConnection(zkUrl)
+    //              //                con.setAutoCommit(false)
+    //              val stm = con.createStatement()
+    //              stm.execute(s"upsert into user(id, INFO.name, INFO.age, INFO.address) values(${r.getId}, '${r.getName}', ${r.getAge},'${r.getAddress}')")
+    //              con.commit()
+    //              stm.close()
+    //              PhoenixUtils.returnConnection(con)
+    //            }
+    //          )
+    //      })
+
+
     ds.foreachRDD(
-      r => r.foreachPartition(
-        p => p.foreach(
-          r => {
-            val con = PhoenixUtil.getConnection(zkUrl)
-            val stm = con.createStatement()
-            //                con.setAutoCommit(false)
-            stm.execute(s"upsert into user(id, INFO.name, INFO.age, INFO.address) values(${r.getId}, '${r.getName}', ${r.getAge},'${r.getAddress}')")
-            con.commit()
-            stm.close()
-            PhoenixUtil.returnConnection(con)
-          }
-        )
-      )
+      r => r.foreachPartition {
+        p =>
+          Class.forName("org.apache.phoenix.jdbc.PhoenixDriver")
+          val conn = DriverManager.getConnection("jdbc:phoenix:" + zkUrl)
+          //                con.setAutoCommit(false)
+          val stm = conn.createStatement()
+          p.foreach(
+            r => {
+              stm.execute(s"upsert into user(id, INFO.name, INFO.age, INFO.address) values(${r.getId}, '${r.getName}', ${r.getAge},'${r.getAddress}')")
+            }
+          )
+          conn.commit()
+          stm.close()
+          conn.close()
+      }
     )
 
     ssc.start()
